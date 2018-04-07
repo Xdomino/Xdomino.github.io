@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>格物致知</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="自修">
+<meta property="og:type" content="website">
+<meta property="og:title" content="格物致知">
+<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:site_name" content="格物致知">
+<meta property="og:description" content="自修">
+<meta property="og:locale" content="zh-Hans">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="格物致知">
+<meta name="twitter:description" content="自修">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">格物致知</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-Git小结" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/04/07/Git小结/" class="article-date">
+  <time datetime="2018-04-07T02:21:20.000Z" itemprop="datePublished">2018-04-07</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/04/07/Git小结/">Git小结</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>Git作为开源的分布式版本控制系统，很多开源项目都使用Git用作版本控制。</p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><p>Google、百度，不予赘述。</p>
+<h1 id="命令补全"><a href="#命令补全" class="headerlink" title="命令补全"></a>命令补全</h1><p>Git默认是无法自动补全命令，需要添加自动补全脚本。<br>下载<a href="https://github.com/git/git/blob/master/contrib/completion/git-completion.bash" target="_blank" rel="noopener">自动补全脚本</a>，放在用户主目录下，并将下面一行添加至 <code>.bashrc</code> 文件中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">source ~/.git-completion.bash</span><br></pre></td></tr></table></figure>
+<h1 id="基本命令"><a href="#基本命令" class="headerlink" title="基本命令"></a>基本命令</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">git init // 初始化仓库</span><br><span class="line">git clone [url] // 克隆现有仓库</span><br><span class="line">git add -u // 将所有已跟踪的文件的改动添加至暂存区</span><br><span class="line">git add -A // 将所有操作添加至暂存区</span><br><span class="line">git add . // 同上</span><br><span class="line">git commit &lt;-m 添加提交说明&gt; &lt;-s 对本次提交签名&gt; // 提交</span><br><span class="line">git reset --soft HEAD~ // 将版本库重置为HEAD指针指向的提交的父提交，暂存区与工作区不变</span><br><span class="line">git reset --mixed HEAD~ // 将版本库与暂存区重置为HEAD指针指向的提交的父提交，工作区不变</span><br><span class="line">git reset HEAD~ // 缺省行为，同上</span><br><span class="line">git reset --hard HEAD~ // 将版本库与暂存区和工作区重置为HEAD指针指向的提交的父提交</span><br><span class="line">git checkout -- &lt;file&gt; // 放弃已修改的内容</span><br><span class="line">git checkout &lt;branchName&gt; // 切换分支</span><br><span class="line">git checkout -b &lt;branchName&gt; // 创建分支并切换</span><br><span class="line">git remote // 列出所有远程主机</span><br><span class="line">git remote -v // 查看远程主机的网址</span><br><span class="line">git remote show &lt;主机名&gt; // 查看远程主机的详细信息</span><br><span class="line">git remote add &lt;主机名&gt; &lt;Url&gt; // 添加远程主机</span><br><span class="line">git remote rm &lt;主机名&gt; // 删除远程主机</span><br><span class="line">git remote rename &lt;原主机名&gt; &lt;新主机名&gt; // 远程主机改名</span><br><span class="line">git fetch &lt;远程主机名&gt; // 将远程主机的更新全部取回本地</span><br><span class="line">git fetch &lt;远程主机名&gt; &lt;分支名&gt; // 获取远程主机特定分支的更新</span><br><span class="line">git pull &lt;远程主机名&gt; &lt;远程分支名&gt;:&lt;本地分支名&gt; // 获取远程分支的更新并与本地分支合并</span><br><span class="line">git pull &lt;远程主机名&gt; &lt;远程分支名&gt; // 获取远程分支更新并与当前分支合并</span><br><span class="line">git push &lt;远程主机名&gt; &lt;本地分支名&gt;:&lt;远程分支名&gt; // 将本地分支推送至远程分支</span><br><span class="line">git push &lt;远程主机名&gt; &lt;本地分支名&gt; // 将本地分支推送至存在“追踪关系”的远程分支，若远程分支不存在则会被新建</span><br><span class="line">git push origin :&lt;远程分支名&gt; // 删除指定远程分支</span><br><span class="line">git push origin --delete &lt;远程分支名&gt; // 同上</span><br></pre></td></tr></table></figure>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="http://www.ruanyifeng.com/blog/2014/06/git_remote.html" target="_blank" rel="noopener">Git远程操作详解</a><br><a href="http://www.cnblogs.com/Lostork/p/git_remote_remote-tracking_tracking_branch.html" target="_blank" rel="noopener">Git-远程分支，远程跟踪分支，跟踪分支的区别</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/04/07/Git小结/" data-id="cjfor8vec0001vd3jaatuhecn" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/04/07/Git小结/">Git小结</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 elvis<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
