@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>kotlin空安全 | 格物致知</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="简介此文档记做Kotlin开发过程中遇到的问题以及总结 空安全可空对象Kotlin与Java不同，对象分为可空和不可空，可空在类型声明后加 ?。 var b : String? 若类型为不可空，此时赋空编译器则会报错。 var b : String = &amp;quot;1&amp;quot; b = null  // 编译不通过 安全的类型转换Java在类型转换时，如果类型不匹配则会出现类型强转异常Class">
+<meta property="og:type" content="article">
+<meta property="og:title" content="kotlin空安全">
+<meta property="og:url" content="http://yoursite.com/2018/04/10/kotlin空安全/index.html">
+<meta property="og:site_name" content="格物致知">
+<meta property="og:description" content="简介此文档记做Kotlin开发过程中遇到的问题以及总结 空安全可空对象Kotlin与Java不同，对象分为可空和不可空，可空在类型声明后加 ?。 var b : String? 若类型为不可空，此时赋空编译器则会报错。 var b : String = &amp;quot;1&amp;quot; b = null  // 编译不通过 安全的类型转换Java在类型转换时，如果类型不匹配则会出现类型强转异常Class">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-10T02:30:25.239Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="kotlin空安全">
+<meta name="twitter:description" content="简介此文档记做Kotlin开发过程中遇到的问题以及总结 空安全可空对象Kotlin与Java不同，对象分为可空和不可空，可空在类型声明后加 ?。 var b : String? 若类型为不可空，此时赋空编译器则会报错。 var b : String = &amp;quot;1&amp;quot; b = null  // 编译不通过 安全的类型转换Java在类型转换时，如果类型不匹配则会出现类型强转异常Class">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">格物致知</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-kotlin空安全" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/04/10/kotlin空安全/" class="article-date">
+  <time datetime="2018-04-10T02:30:25.000Z" itemprop="datePublished">2018-04-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      kotlin空安全
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>此文档记做Kotlin开发过程中遇到的问题以及总结</p>
+<h3 id="空安全"><a href="#空安全" class="headerlink" title="空安全"></a>空安全</h3><h4 id="可空对象"><a href="#可空对象" class="headerlink" title="可空对象"></a>可空对象</h4><p>Kotlin与Java不同，对象分为可空和不可空，可空在类型声明后加 <code>?</code>。</p>
+<pre><code>var b : String?
+</code></pre><p>若类型为不可空，此时赋空编译器则会报错。</p>
+<pre><code>var b : String = &quot;1&quot;
+b = null  // 编译不通过
+</code></pre><h4 id="安全的类型转换"><a href="#安全的类型转换" class="headerlink" title="安全的类型转换"></a>安全的类型转换</h4><p>Java在类型转换时，如果类型不匹配则会出现类型强转异常<code>ClassCastException</code>导致Crash；而Kotlin则可以采取安全的类型转换。</p>
+<pre><code>// 若a的类型不为Int则返回null，不会导致crash
+val aInt: Int? = a as? Int 
+</code></pre><h4 id="安全的调用"><a href="#安全的调用" class="headerlink" title="安全的调用"></a>安全的调用</h4><p>在使用可能为空的对象时，Java中若不进行空判断则非常容易产生空指针异常，所以经常会出现下面的代码。</p>
+<pre><code>if (不为空) { } else { }
+</code></pre><p>而Kotlin中可以采用安全的调用方式。</p>
+<pre><code>// 如果 b 非空，就返回 b.length；否则返回 null
+val bLength: Int? = b?.length 
+</code></pre><p>若想对非空值执行某个操作，安全调用操作符可以与 let 一起使用。</p>
+<pre><code>bLength?.let{
+    // 具体逻辑
+}
+// 只有bLength不为空时才会执行lambda表达式
+</code></pre><h4 id="Elvis操作符"><a href="#Elvis操作符" class="headerlink" title="Elvis操作符"></a>Elvis操作符</h4><p>当我们有一个可空的引用 b 时，我们可以说 如果 b 非空，我使用它；否则使用某个非空的值 x</p>
+<pre><code>val bLength: Int = if (b != null) b.length else -1
+</code></pre><p>除了采用if的方式还可以使用elvis操作符<code>?:</code>，与Java中的三目表达式类似<code>:</code>。</p>
+<pre><code>// 如果 ?: 左侧表达式非空，elvis 操作符就调用其左侧表达式，否则调用右侧表达式。
+val bLength = b?.length ?: -1
+</code></pre><h4 id="操作符"><a href="#操作符" class="headerlink" title="!! 操作符"></a><code>!!</code> 操作符</h4><p>若想抛出空指针异常NPE</p>
+<pre><code>// 若b为空则抛出空指针异常
+val bLength = b!!.length
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/04/10/kotlin空安全/" data-id="cjft1ttsd0002kj3jar2ijho8" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2018/04/10/Kotlin与Java通信/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Kotlin与Java通信
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2018/04/07/Git小结/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Git小结</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/04/10/Kotlin与Java通信/">Kotlin与Java通信</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/10/kotlin空安全/">kotlin空安全</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/07/Git小结/">Git小结</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 elvis<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>

@@ -61,6 +61,113 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Kotlin与Java通信" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/04/10/Kotlin与Java通信/" class="article-date">
+  <time datetime="2018-04-10T02:30:35.000Z" itemprop="datePublished">2018-04-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/04/10/Kotlin与Java通信/">Kotlin与Java通信</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Kotlin 是一个用于现代多平台应用的静态编程语言，由JetBrains公司开发。<br>Kotlin 在设计时就考虑了 Java 互操作性，因此 Kotlin 完全兼容 Java 代码；<br>但是在使用过程中还是有可能会出现一些小的问题。</p>
+<h2 id="Java调用Kotlin方法传入空对象"><a href="#Java调用Kotlin方法传入空对象" class="headerlink" title="Java调用Kotlin方法传入空对象"></a>Java调用Kotlin方法传入空对象</h2><p>如果Kotlin文件声明的方法的参数列表为非空类型，在纯 Kotlin 代码的调用，编译器会帮你完成空检测。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">// Hello.kt</span><br><span class="line">class Foo &#123;</span><br><span class="line">    companion object &#123;</span><br><span class="line">        fun bar(name: String) &#123;</span><br><span class="line">            print(name)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//Hello1.kt</span><br><span class="line">fun main(args: Array&lt;String&gt;) &#123;</span><br><span class="line">    Foo.bar(null) //编译不通过</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是当 Java 调用 Kotlin 时则不一样，编译器无法帮你识别 Java 传递的参数是否是非空类型。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//Hello2.java</span><br><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">    Foo.Companion.bar(null);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上代码在编译时不会出错，但运行时则会报如下错误。</p>
+<pre><code>java.lang.IllegalArgumentException: Parameter specified as non-null is null: method Foo$Companion.bar, parameter name
+</code></pre><p>Kotlin 在声明供 Java 调用的方法时参数列表应该声明为可空类型。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// Hello.kt</span><br><span class="line">fun bar(name: String?) &#123;</span><br><span class="line">    print(name)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/04/10/Kotlin与Java通信/" data-id="cjft1ttsb0001kj3jmufwyehl" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-kotlin空安全" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/04/10/kotlin空安全/" class="article-date">
+  <time datetime="2018-04-10T02:30:25.000Z" itemprop="datePublished">2018-04-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/04/10/kotlin空安全/">kotlin空安全</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>此文档记做Kotlin开发过程中遇到的问题以及总结</p>
+<h3 id="空安全"><a href="#空安全" class="headerlink" title="空安全"></a>空安全</h3><h4 id="可空对象"><a href="#可空对象" class="headerlink" title="可空对象"></a>可空对象</h4><p>Kotlin与Java不同，对象分为可空和不可空，可空在类型声明后加 <code>?</code>。</p>
+<pre><code>var b : String?
+</code></pre><p>若类型为不可空，此时赋空编译器则会报错。</p>
+<pre><code>var b : String = &quot;1&quot;
+b = null  // 编译不通过
+</code></pre><h4 id="安全的类型转换"><a href="#安全的类型转换" class="headerlink" title="安全的类型转换"></a>安全的类型转换</h4><p>Java在类型转换时，如果类型不匹配则会出现类型强转异常<code>ClassCastException</code>导致Crash；而Kotlin则可以采取安全的类型转换。</p>
+<pre><code>// 若a的类型不为Int则返回null，不会导致crash
+val aInt: Int? = a as? Int 
+</code></pre><h4 id="安全的调用"><a href="#安全的调用" class="headerlink" title="安全的调用"></a>安全的调用</h4><p>在使用可能为空的对象时，Java中若不进行空判断则非常容易产生空指针异常，所以经常会出现下面的代码。</p>
+<pre><code>if (不为空) { } else { }
+</code></pre><p>而Kotlin中可以采用安全的调用方式。</p>
+<pre><code>// 如果 b 非空，就返回 b.length；否则返回 null
+val bLength: Int? = b?.length 
+</code></pre><p>若想对非空值执行某个操作，安全调用操作符可以与 let 一起使用。</p>
+<pre><code>bLength?.let{
+    // 具体逻辑
+}
+// 只有bLength不为空时才会执行lambda表达式
+</code></pre><h4 id="Elvis操作符"><a href="#Elvis操作符" class="headerlink" title="Elvis操作符"></a>Elvis操作符</h4><p>当我们有一个可空的引用 b 时，我们可以说 如果 b 非空，我使用它；否则使用某个非空的值 x</p>
+<pre><code>val bLength: Int = if (b != null) b.length else -1
+</code></pre><p>除了采用if的方式还可以使用elvis操作符<code>?:</code>，与Java中的三目表达式类似<code>:</code>。</p>
+<pre><code>// 如果 ?: 左侧表达式非空，elvis 操作符就调用其左侧表达式，否则调用右侧表达式。
+val bLength = b?.length ?: -1
+</code></pre><h4 id="操作符"><a href="#操作符" class="headerlink" title="!! 操作符"></a><code>!!</code> 操作符</h4><p>若想抛出空指针异常NPE</p>
+<pre><code>// 若b为空则抛出空指针异常
+val bLength = b!!.length
+</code></pre>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/04/10/kotlin空安全/" data-id="cjft1ttsd0002kj3jar2ijho8" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-Git小结" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2018/04/07/Git小结/" class="article-date">
@@ -93,7 +200,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/04/07/Git小结/" data-id="cjfov66h800012h3j6l3gcw6z" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2018/04/07/Git小结/" data-id="cjft1ttsp0003kj3jalci2u7y" class="article-share-link">Share</a>
       
       
     </footer>
@@ -132,6 +239,14 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2018/04/10/Kotlin与Java通信/">Kotlin与Java通信</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/10/kotlin空安全/">kotlin空安全</a>
+          </li>
         
           <li>
             <a href="/2018/04/07/Git小结/">Git小结</a>
