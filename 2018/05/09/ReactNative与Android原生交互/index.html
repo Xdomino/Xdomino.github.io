@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>ReactNative与Android原生交互 | 格物致知</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="ReactNative调用原生通过原生向ReactNative中注入方法来实现。 第一步：自定义Module12345678910111213141516171819202122232425262728293031public class ToastModule extends ReactContextBaseJavaModule &amp;#123;  private static final Stri">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ReactNative与Android原生交互">
+<meta property="og:url" content="http://yoursite.com/2018/05/09/ReactNative与Android原生交互/index.html">
+<meta property="og:site_name" content="格物致知">
+<meta property="og:description" content="ReactNative调用原生通过原生向ReactNative中注入方法来实现。 第一步：自定义Module12345678910111213141516171819202122232425262728293031public class ToastModule extends ReactContextBaseJavaModule &amp;#123;  private static final Stri">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-05-09T09:16:48.753Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ReactNative与Android原生交互">
+<meta name="twitter:description" content="ReactNative调用原生通过原生向ReactNative中注入方法来实现。 第一步：自定义Module12345678910111213141516171819202122232425262728293031public class ToastModule extends ReactContextBaseJavaModule &amp;#123;  private static final Stri">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">格物致知</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-ReactNative与Android原生交互" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/05/09/ReactNative与Android原生交互/" class="article-date">
+  <time datetime="2018-05-09T09:16:48.000Z" itemprop="datePublished">2018-05-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ReactNative与Android原生交互
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h3 id="ReactNative调用原生"><a href="#ReactNative调用原生" class="headerlink" title="ReactNative调用原生"></a>ReactNative调用原生</h3><p>通过原生向ReactNative中注入方法来实现。</p>
+<h4 id="第一步：自定义Module"><a href="#第一步：自定义Module" class="headerlink" title="第一步：自定义Module"></a>第一步：自定义Module</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">public class ToastModule extends ReactContextBaseJavaModule &#123;</span><br><span class="line">  private static final String DURATION_SHORT_KEY = &quot;SHORT&quot;;</span><br><span class="line">  private static final String DURATION_LONG_KEY = &quot;LONG&quot;;</span><br><span class="line">  </span><br><span class="line">  public ToastModule(ReactApplicationContext reactContext) &#123;</span><br><span class="line">    super(reactContext);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @Override</span><br><span class="line">  public String getName() &#123;</span><br><span class="line">    return &quot;Toast&quot;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  @ReactMethod</span><br><span class="line">  public void show(final String message) &#123;</span><br><span class="line">    UiThreadUtil.runOnUiThread(new Runnable() &#123;</span><br><span class="line">      @Override</span><br><span class="line">      public void run() &#123;</span><br><span class="line">        Toast.makeText(getReactApplicationContext(), message, Toast.SHORT).show();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">    @Override</span><br><span class="line">  public Map&lt;String, Object&gt; getConstants() &#123;</span><br><span class="line">    final Map&lt;String, Object&gt; constants = new HashMap&lt;&gt;();</span><br><span class="line">    constants.put(DURATION_SHORT_KEY, Toast.LENGTH_SHORT);</span><br><span class="line">    constants.put(DURATION_LONG_KEY, Toast.LENGTH_LONG);</span><br><span class="line">    return constants;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>@ReactMethod注解的方法才会被注入到RN中，getConstants用于向RN注入常量。</p>
+<h5 id="被-ReactMethod注解方法支持的参数类型"><a href="#被-ReactMethod注解方法支持的参数类型" class="headerlink" title="被@ReactMethod注解方法支持的参数类型"></a>被@ReactMethod注解方法支持的参数类型</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Boolean -&gt; Bool</span><br><span class="line">Integer -&gt; Number</span><br><span class="line">Double -&gt; Number</span><br><span class="line">Float -&gt; Number</span><br><span class="line">String -&gt; String</span><br><span class="line">Callback -&gt; function</span><br><span class="line">ReadableMap -&gt; Object</span><br><span class="line">ReadableArray -&gt; Array</span><br></pre></td></tr></table></figure>
+<h4 id="第二步：自定义Package"><a href="#第二步：自定义Package" class="headerlink" title="第二步：自定义Package"></a>第二步：自定义Package</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class ToastPackage implements ReactPackage &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public List&lt;NativeModule&gt; createNativeModules(ReactApplicationContext reactContext) &#123;</span><br><span class="line">        List&lt;NativeModule&gt; modules = new ArrayList&lt;&gt;();</span><br><span class="line">        modules.add(new ToastModule(reactContext));</span><br><span class="line">        return modules;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public List&lt;ViewManager&gt; createViewManagers(ReactApplicationContext reactContext) &#123;</span><br><span class="line">        return Collections.emptyList();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="第三步：注入到ReactNative"><a href="#第三步：注入到ReactNative" class="headerlink" title="第三步：注入到ReactNative"></a>第三步：注入到ReactNative</h4><p>ReactNative集成原生则是在对应的MainApplication中通过<code>getPackages</code>方法注入。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">protected List&lt;ReactPackage&gt; getPackages() &#123;</span><br><span class="line">    return Arrays.&lt;ReactPackage&gt;asList(</span><br><span class="line">            new MainReactPackage(),</span><br><span class="line">            new ToastPackage());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>若是原生集成ReactNative则是在构建<code>ReactInstanceManager</code>时通过<code>ReactInstanceManager.Builder</code>的<code>addPackage</code>注入。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">mReactInstanceManager = ReactInstanceManager.builder()</span><br><span class="line">              .setApplication(getApplication())</span><br><span class="line">              .setBundleAssetName(&quot;index.android.bundle&quot;)</span><br><span class="line">              .addPackage(new MainReactPackage())</span><br><span class="line">              .addPackage(new ToastPackage())</span><br><span class="line">              .setInitialLifecycleState(LifecycleState.RESUMED)</span><br><span class="line">              .build();</span><br></pre></td></tr></table></figure>
+<h4 id="第四步：在RN中调用"><a href="#第四步：在RN中调用" class="headerlink" title="第四步：在RN中调用"></a>第四步：在RN中调用</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import &#123;NativeModules&#125; from &apos;react-native&apos;;</span><br><span class="line"></span><br><span class="line">const Toast = NativeModules.Toast;</span><br><span class="line"></span><br><span class="line">Toast.show(&quot;Toast&quot;, Toast.SHORT);</span><br></pre></td></tr></table></figure>
+<h3 id="原生回调ReactNative"><a href="#原生回调ReactNative" class="headerlink" title="原生回调ReactNative"></a>原生回调ReactNative</h3><h4 id="Callbacks"><a href="#Callbacks" class="headerlink" title="Callbacks"></a>Callbacks</h4><p>原生Module也支持Callback参数类型，用于返回结果到Js。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">public class LoginModule extends ReactContextBaseJavaModule&#123;</span><br><span class="line">···</span><br><span class="line">	@ReactMethod</span><br><span class="line">	public void login(String acount,String pwd,</span><br><span class="line">			 Callback error,</span><br><span class="line">			 Callback success)&#123;</span><br><span class="line">		if (login(acount,pwd))&#123;</span><br><span class="line">			success.invoke(&quot;1&quot;);</span><br><span class="line">		&#125;else&#123;</span><br><span class="line">			error.invoke(&quot;0&quot;);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Js</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Login.login(&quot;123&quot;,&quot;456&quot;,(msg) =&gt; &#123;</span><br><span class="line">    console.log(msg);</span><br><span class="line">  &#125;,(msg) =&gt; &#123;</span><br><span class="line">    console.log(msg);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h3><p><a href="https://facebook.github.io/react-native/docs/native-modules-android.html" target="_blank" rel="noopener">native-modules-android</a></p>
+<p><a href="https://danke77.github.io/2016/12/07/react-native-native-modules-android/" target="_blank" rel="noopener">React Native 原生模块和 JS 模块交互</a></p>
+<p><a href="http://www.guiyongdong.com/2017/04/01/ReactNative%E5%AE%9E%E7%8E%B0js%E5%92%8C%E5%8E%9F%E7%94%9F%E4%BA%A4%E4%BA%92/" target="_blank" rel="noopener">ReactNative实现js和原生交互</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2018/05/09/ReactNative与Android原生交互/" data-id="cjgyw7hmi0006n63jliqv1uc2" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2018/04/10/Kotlin与Java通信/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Kotlin与Java通信</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">May 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">April 2018</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2018/05/09/ReactNative与Android原生交互/">ReactNative与Android原生交互</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/10/Kotlin与Java通信/">Kotlin与Java通信</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/10/kotlin空安全/">kotlin空安全</a>
+          </li>
+        
+          <li>
+            <a href="/2018/04/07/Git小结/">Git小结</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2018 elvis<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
